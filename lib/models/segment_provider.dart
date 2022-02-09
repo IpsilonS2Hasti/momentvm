@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'task.dart';
 
 class Segment with ChangeNotifier {
+  final int index;
   final String name;
   final int start;
   final int end;
@@ -11,6 +12,7 @@ class Segment with ChangeNotifier {
   List<Task> tasks;
 
   Segment({
+    required this.index,
     required this.start,
     required this.end,
     required this.name,

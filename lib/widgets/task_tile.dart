@@ -6,9 +6,11 @@ import '../models/segment_provider.dart';
 class TaskTile extends StatelessWidget {
   final int index;
   final Segment segment;
+  final PageController dayController;
 
   const TaskTile({
     Key? key,
+    required this.dayController,
     required this.index,
     required this.segment,
   }) : super(key: key);
@@ -19,13 +21,15 @@ class TaskTile extends StatelessWidget {
       color: const Color(0x00000000),
       key: Key('$index'),
       child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
+        onTap: () async {
+          var newSeg = await Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => TaskScreen(
               segment: segment,
               index: index,
             ),
           ));
+          if (newSeg != null)
+            dayController.jumpToPage(newSeg['newSegment'].index);
         },
         child: Container(
           decoration: const BoxDecoration(

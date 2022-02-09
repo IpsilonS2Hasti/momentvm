@@ -12,9 +12,10 @@ import '../screens/new_task_screen.dart';
 import './time_tracker.dart';
 
 class SegmentView extends StatelessWidget {
-  SegmentView({Key? key}) : super(key: key); //was const before controller
+  final PageController dayController;
 
-  final ScrollController _controller = ScrollController();
+  const SegmentView({Key? key, required this.dayController}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final segment = Provider.of<Segment>(context);
@@ -44,11 +45,11 @@ class SegmentView extends StatelessWidget {
                           child: segment.tasks.isEmpty
                               ? Text("Empty!")
                               : ReorderableListView.builder(
-                                  scrollController: _controller,
                                   itemCount: segment.tasks.length,
                                   itemBuilder:
                                       (BuildContext context, int index) =>
                                           TaskTile(
+                                    dayController: dayController,
                                     segment: segment,
                                     index: index,
                                     key: ValueKey(

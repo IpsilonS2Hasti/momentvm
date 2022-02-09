@@ -33,7 +33,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(widget.segment.backgroundImage),
+            image: AssetImage(widget.segment.backgroundImage),
             fit: BoxFit.cover,
           ),
         ),

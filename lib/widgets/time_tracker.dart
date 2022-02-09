@@ -16,7 +16,7 @@ class _TimeTrackerState extends State<TimeTracker> {
   void initState() {
     super.initState();
 
-    timer = Timer.periodic(Duration(minutes: 1), (_) {
+    timer = Timer.periodic(const Duration(minutes: 1), (_) {
       print("1 minute has passed");
       setState(() {});
     });

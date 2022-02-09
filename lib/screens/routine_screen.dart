@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:momentvm/models/day_provider.dart';
@@ -30,6 +32,7 @@ class RoutineScreen extends StatefulWidget {
 }
 
 class _RoutineScreenState extends State<RoutineScreen> {
+  final dayController = PageController();
   int _currentPage = 0;
 
   @override
@@ -53,6 +56,7 @@ class _RoutineScreenState extends State<RoutineScreen> {
               Expanded(
                 //I guess Expanded() needs an axis-defining widget as it's parent
                 child: PageView.builder(
+                  controller: dayController,
                   physics: const CustomPageViewScrollPhysics(),
                   itemCount: segments.length,
                   onPageChanged: (int page) {
@@ -63,7 +67,10 @@ class _RoutineScreenState extends State<RoutineScreen> {
                   itemBuilder: (BuildContext context, int index) {
                     return ChangeNotifierProvider.value(
                       value: segments[index],
-                      child: SegmentView(key: ValueKey(segments[index].name)),
+                      child: SegmentView(
+                        key: ValueKey(segments[index].name),
+                        dayController: dayController,
+                      ),
                     );
                   },
                 ),

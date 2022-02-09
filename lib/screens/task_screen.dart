@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import 'package:momentvm/models/task.dart';
+import 'package:provider/provider.dart';
+import '../models/day_provider.dart';
 import '../models/segment_provider.dart';
 
 class TaskScreen extends StatefulWidget {
@@ -17,12 +19,20 @@ class TaskScreen extends StatefulWidget {
 
 class _TaskScreenState extends State<TaskScreen> {
   final titleController = TextEditingController();
+  late String dropdownValue;
+
+  @override
+  void initState() {
+    titleController.text = widget.segment.tasks[widget.index].title;
+    dropdownValue = widget.segment.index.toString();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final segments = Provider.of<Day>(context).segments;
+    var selSeg = segments[int.parse(dropdownValue)];
     final task = widget.segment.tasks[widget.index];
-
-    titleController.text = task.title;
 
     return Scaffold(
       appBar: AppBar(
@@ -33,76 +43,119 @@ class _TaskScreenState extends State<TaskScreen> {
         iconTheme: const IconThemeData(
           color: Colors.black54,
         ),
-        backgroundColor: widget.segment.listColor,
+        backgroundColor: selSeg.listColor,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: NetworkImage(widget.segment.backgroundImage),
-            fit: BoxFit.cover,
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: Container(
+          key: ValueKey(selSeg.name),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(selSeg.backgroundImage),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: ListView(
-          children: [
-            Container(
-              margin: const EdgeInsets.all(16),
-              child: ClipRRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24),
-                      color: widget.segment.listColor.withOpacity(0.5),
-                    ),
-                    child: Column(
-                      children: [
-                        TextField(
-                          decoration: const InputDecoration(
-                            labelText: "Title",
+          child: ListView(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(16),
+                child: ClipRRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(24),
+                        color: selSeg.listColor.withOpacity(0.5),
+                      ),
+                      child: Column(
+                        children: [
+                          TextField(
+                            decoration: const InputDecoration(
+                              labelText: "Title",
+                            ),
+                            controller: titleController,
                           ),
-                          controller: titleController,
-                        ),
-                        const SizedBox(height: 24),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            textStyle: const TextStyle(fontSize: 20),
+                          const SizedBox(height: 24),
+                          Row(
+                            children: [
+                              const Text(
+                                "Reschedule:",
+                                textScaleFactor: 1.2,
+                              ),
+                              const SizedBox(width: 16),
+                              DropdownButton<String>(
+                                dropdownColor: selSeg.listColor,
+                                borderRadius: BorderRadius.circular(24),
+                                value: dropdownValue,
+                                icon: const Icon(Icons.arrow_drop_down),
+                                elevation: 16,
+                                underline: Container(
+                                  height: 2,
+                                  color: Colors.black26,
+                                ),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownValue = newValue!;
+                                  });
+                                },
+                                items: [
+                                  ...segments
+                                ].map<DropdownMenuItem<String>>((Segment seg) {
+                                  return DropdownMenuItem<String>(
+                                    value: seg.index.toString(),
+                                    child: Text(seg.name),
+                                  );
+                                }).toList(),
+                              ),
+                            ],
                           ),
-                          onPressed: () {
-                            task.title = titleController.text;
-                            widget.segment.updateTasks();
-                          },
-                          child: const Text('Update Task'),
-                        ),
-                      ],
+                          const SizedBox(height: 10),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              textStyle: const TextStyle(fontSize: 20),
+                            ),
+                            onPressed: () {
+                              task.title = titleController.text;
+                              widget.segment.updateTasks();
+                              if (widget.segment != selSeg) {
+                                widget.segment.tasks.remove(task);
+                                selSeg.tasks.insert(0, task);
+                              }
+                              Navigator.pop(context, {"newSegment": selSeg});
+                            },
+                            child: const Text('Save Changes'),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+                  borderRadius: BorderRadius.circular(24),
                 ),
-                borderRadius: BorderRadius.circular(24),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.all(16),
-              child: ClipRRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24),
-                      color: widget.segment.listColor.withOpacity(0.5),
-                    ),
-                    child: Column(
-                      children: [],
+              Container(
+                margin: const EdgeInsets.all(16),
+                child: ClipRRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(24),
+                        color: selSeg.listColor.withOpacity(0.5),
+                      ),
+                      child: Column(
+                        children: [buildHeader()],
+                      ),
                     ),
                   ),
+                  borderRadius: BorderRadius.circular(24),
                 ),
-                borderRadius: BorderRadius.circular(24),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

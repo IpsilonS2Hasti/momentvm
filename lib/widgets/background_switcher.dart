@@ -20,7 +20,7 @@ class BackgroundSwitcher extends StatelessWidget {
             _currentPage.toString()), //Key is need for the animation to work
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(_segments[_currentPage].backgroundImage),
+            image: AssetImage(_segments[_currentPage].backgroundImage),
             fit: BoxFit.cover,
           ),
         ),
