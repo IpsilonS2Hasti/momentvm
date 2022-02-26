@@ -6,6 +6,7 @@ import 'package:momentvm/models/task.dart';
 import 'package:provider/provider.dart';
 import '../models/day_provider.dart';
 import '../models/segment_provider.dart';
+import 'package:flutter_quill/flutter_quill.dart' hide Text;
 
 class TaskScreen extends StatefulWidget {
   final Segment segment;
@@ -18,6 +19,7 @@ class TaskScreen extends StatefulWidget {
 }
 
 class _TaskScreenState extends State<TaskScreen> {
+  QuillController notesController = QuillController.basic();
   final titleController = TextEditingController();
   late String dropdownValue;
 
@@ -147,7 +149,40 @@ class _TaskScreenState extends State<TaskScreen> {
                         color: selSeg.listColor.withOpacity(0.5),
                       ),
                       child: Column(
-                        children: [buildHeader()],
+                        children: [
+                          buildHeader(),
+                          Container(
+                            height: 400,
+                            child: Column(
+                              children: [
+                                QuillToolbar.basic(
+                                  controller: notesController,
+                                  showCodeBlock: false,
+                                  showInlineCode: false,
+                                  multiRowsDisplay: false,
+                                  iconTheme: QuillIconTheme(
+                                    iconUnselectedFillColor: Colors.transparent,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    child: QuillEditor(
+                                      scrollController: ScrollController(),
+                                      scrollable: true,
+                                      focusNode: FocusNode(),
+                                      autoFocus: false,
+                                      expands: false,
+                                      padding: EdgeInsets.zero,
+                                      controller: notesController,
+                                      readOnly:
+                                          false, // true for view only mode
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

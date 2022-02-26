@@ -17,6 +17,9 @@ class MyApp extends StatelessWidget {
     return Provider(
       create: (context) => Day(),
       child: MaterialApp(
+        theme: ThemeData(
+          canvasColor: Colors.transparent,
+        ),
         title: _title,
         home: RoutineScreen(),
       ),
