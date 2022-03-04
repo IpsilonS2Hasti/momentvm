@@ -1,7 +1,11 @@
 import 'dart:ui';
+import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:momentvm/models/task.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import '../models/segment_provider.dart';
 
@@ -64,7 +68,9 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                           textStyle: const TextStyle(fontSize: 20),
                         ),
                         onPressed: () {
-                          widget.segment.addTask(Task(titleController.text));
+                          print("THE ID IS:" +
+                              widget.segment
+                                  .addTask(title: titleController.text));
                           Navigator.pop(context);
                         },
                         child: const Text('Create Task'),

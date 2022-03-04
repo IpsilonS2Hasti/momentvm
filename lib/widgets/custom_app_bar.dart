@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:momentvm/models/authentication_service.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget title;
@@ -19,6 +22,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         key: key,
         title: title,
         backgroundColor: backgroundColor,
+        actions: [
+          IconButton(
+            onPressed: () => context.read<AuthenticationService>().signOut(),
+            icon: Icon(
+              Icons.logout,
+              color: Colors.black54,
+            ),
+          )
+        ],
       ),
     );
   }

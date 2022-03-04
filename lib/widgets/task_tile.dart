@@ -39,7 +39,8 @@ class TaskTile extends StatelessWidget {
           ),
           height: 75,
           child: Center(
-            child: Text(segment.tasks[index].title),
+            child: Text(
+                segment.tasks[index].title + " id:" + segment.tasks[index].id),
           ),
         ),
       ),

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "149095880750",
+    "firebase_url": "https://momentvm-869ba-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "momentvm-869ba",
+    "storage_bucket": "momentvm-869ba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:149095880750:android:50637da7666e4862bb67bf",
+        "android_client_info": {
+          "package_name": "com.example.momentvm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "149095880750-af3bq9316pd8dtrjvilevkpg6s7gops5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsT94sgrr_3xYPKHcz3W-vmTIejouky0A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "149095880750-af3bq9316pd8dtrjvilevkpg6s7gops5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

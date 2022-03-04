@@ -1,6 +1,7 @@
 class Task {
   String title;
   bool isCompleted = false;
+  String id;
 
-  Task(this.title);
+  Task({required this.id, required this.title});
 }

@@ -160,7 +160,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                   showCodeBlock: false,
                                   showInlineCode: false,
                                   multiRowsDisplay: false,
-                                  iconTheme: QuillIconTheme(
+                                  iconTheme: const QuillIconTheme(
                                     iconUnselectedFillColor: Colors.transparent,
                                   ),
                                 ),

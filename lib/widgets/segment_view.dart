@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:momentvm/models/task.dart';
 import 'package:momentvm/screens/new_task_screen.dart';
@@ -52,18 +53,13 @@ class SegmentView extends StatelessWidget {
                                     dayController: dayController,
                                     segment: segment,
                                     index: index,
-                                    key: ValueKey(
-                                        segment.tasks[index]), //change to id
+                                    key: ValueKey(segment.tasks[index].id),
                                   ),
                                   onReorder: (int oldIndex, int newIndex) {
-                                    if (oldIndex < newIndex) {
-                                      newIndex -=
-                                          1; //This is necessary because newIndex is the new position before we remove the old element, but after that operation, the list gets smaller by 1
-                                    }
-                                    final item =
-                                        segment.tasks.removeAt(oldIndex);
-                                    segment.tasks.insert(newIndex, item);
-                                    segment.updateTasks();
+                                    segment.reorderTasks(
+                                      oldIndex: oldIndex,
+                                      newIndex: newIndex,
+                                    );
                                   },
                                 ),
                         ),
