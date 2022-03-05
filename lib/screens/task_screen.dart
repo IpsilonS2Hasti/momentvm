@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -19,13 +20,17 @@ class TaskScreen extends StatefulWidget {
 }
 
 class _TaskScreenState extends State<TaskScreen> {
-  QuillController notesController = QuillController.basic();
+  late QuillController notesController;
   final titleController = TextEditingController();
   late String dropdownValue;
 
   @override
   void initState() {
     titleController.text = widget.segment.tasks[widget.index].title;
+    var myJSON = jsonDecode(widget.segment.tasks[widget.index].notes);
+    notesController = QuillController(
+        document: Document.fromJson(myJSON),
+        selection: TextSelection.collapsed(offset: 0));
     dropdownValue = widget.segment.index.toString();
     super.initState();
   }
@@ -120,10 +125,14 @@ class _TaskScreenState extends State<TaskScreen> {
                             ),
                             onPressed: () {
                               task.title = titleController.text;
-                              widget.segment.updateTasks();
+                              task.notes = jsonEncode(
+                                  notesController.document.toDelta().toJson());
+                              widget.segment.updateTask(task);
                               if (widget.segment != selSeg) {
                                 widget.segment.tasks.remove(task);
+                                widget.segment.updateSegment();
                                 selSeg.tasks.insert(0, task);
+                                selSeg.updateSegment();
                               }
                               Navigator.pop(context, {"newSegment": selSeg});
                             },
@@ -204,18 +213,11 @@ class _TaskScreenState extends State<TaskScreen> {
       width: double.infinity,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                "Notes:",
-                textScaleFactor: 1.2,
-              )),
-          IconButton(
-            icon: const Icon(Icons.add),
-            tooltip: 'Add new note',
-            onPressed: () {},
-          ),
+        children: const [
+          Text(
+            "Notes:",
+            textScaleFactor: 1.2,
+          )
         ],
       ),
     );

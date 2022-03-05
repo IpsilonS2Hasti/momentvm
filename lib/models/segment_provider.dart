@@ -26,12 +26,16 @@ class Segment with ChangeNotifier {
     firestore.doc('/users/$uid').get().then(
       (value) {
         try {
-          var refArr = value.get(FieldPath([name]));
+          List refArr = value.get(FieldPath([name]));
           print(refArr);
           for (int i = 0; i < refArr.length; i++) {
             refArr[i].get().then(
               (value) {
-                tasks.add(Task(id: value.id, title: value.get("title")));
+                tasks.add(Task(
+                  id: value.id,
+                  title: value.get("title"),
+                  notes: value.get("notes"),
+                ));
                 notifyListeners();
               },
             );
@@ -47,10 +51,11 @@ class Segment with ChangeNotifier {
   //   return _tasks; //You can mutate individual tasks however, as it returns a new list containing refrences to the them
   // }
 
-  void updateTasks([List<Task>? newTasks]) {
-    if (newTasks != null) {
-      tasks = newTasks;
-    }
+  void updateTask(Task newTask) {
+    firestore.doc('/users/$uid/tasks/${newTask.id}').update({
+      "title": newTask.title,
+      "notes": newTask.notes
+    }); //Needs to be manually adjusted every time, use converter instead
     notifyListeners();
   }
 
@@ -78,5 +83,12 @@ class Segment with ChangeNotifier {
           tasks.map((e) => firestore.doc('/users/$uid/tasks/${e.id}')).toList(),
     });
     notifyListeners();
+  }
+
+  void updateSegment() {
+    firestore.doc('/users/$uid').update({
+      name:
+          tasks.map((e) => firestore.doc('/users/$uid/tasks/${e.id}')).toList(),
+    });
   }
 }
