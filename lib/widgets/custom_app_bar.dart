@@ -12,7 +12,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       : super(key: key);
 
   @override
-  Size get preferredSize => Size.fromHeight(56.0);
+  Size get preferredSize => Size.fromHeight(92.0);
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +31,32 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           )
         ],
+        bottom: TabBar(tabs: [
+          Tab(
+            child: Row(children: [
+              Icon(
+                Icons.format_list_numbered_rtl_rounded,
+                color: Colors.black54,
+              ),
+              Text(
+                " My Routine",
+                style: TextStyle(color: Colors.black54),
+              ),
+            ]),
+          ),
+          Tab(
+            child: Row(children: [
+              Icon(
+                Icons.star,
+                color: Colors.black54,
+              ),
+              Text(
+                " Progress",
+                style: TextStyle(color: Colors.black54),
+              ),
+            ]),
+          ),
+        ]),
       ),
     );
   }

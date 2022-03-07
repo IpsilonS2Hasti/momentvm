@@ -138,6 +138,17 @@ class _TaskScreenState extends State<TaskScreen> {
                             },
                             child: const Text('Save Changes'),
                           ),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              textStyle: const TextStyle(fontSize: 18),
+                            ),
+                            onPressed: () {
+                              widget.segment.deleteTask(task);
+                              Navigator.pop(context, {"newSegment": selSeg});
+                            },
+                            child: const Text('Delete Task',
+                                style: TextStyle(color: Colors.redAccent)),
+                          ),
                         ],
                       ),
                     ),

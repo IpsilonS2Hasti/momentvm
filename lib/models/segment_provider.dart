@@ -35,6 +35,7 @@ class Segment with ChangeNotifier {
                   id: value.id,
                   title: value.get("title"),
                   notes: value.get("notes"),
+                  isCompleted: value.get("isCompleted"),
                 ));
                 notifyListeners();
               },
@@ -54,7 +55,8 @@ class Segment with ChangeNotifier {
   void updateTask(Task newTask) {
     firestore.doc('/users/$uid/tasks/${newTask.id}').update({
       "title": newTask.title,
-      "notes": newTask.notes
+      "notes": newTask.notes,
+      "isCompleted": newTask.isCompleted
     }); //Needs to be manually adjusted every time, use converter instead
     notifyListeners();
   }
@@ -65,10 +67,21 @@ class Segment with ChangeNotifier {
       name: FieldValue.arrayUnion([newTaskRef])
     });
     Task newTask = Task(id: newTaskRef.id, title: title);
-    newTaskRef.set({"title": title});
+    newTaskRef
+        .set({"title": title, "isCompleted": false, "notes": newTask.notes});
     tasks.add(newTask);
     notifyListeners();
     return newTaskRef.id;
+  }
+
+  void deleteTask(Task delTask) {
+    firestore.doc('/users/$uid/tasks/${delTask.id}').delete();
+    tasks.remove(delTask);
+    firestore.doc('/users/$uid').update({
+      name:
+          tasks.map((e) => firestore.doc('/users/$uid/tasks/${e.id}')).toList(),
+    });
+    notifyListeners();
   }
 
   void reorderTasks({required int newIndex, required int oldIndex}) {

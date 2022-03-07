@@ -17,7 +17,6 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
-
   static const String _title = 'My Day';
 
   @override
@@ -40,7 +39,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        theme: ThemeData(),
+        theme: ThemeData(canvasColor: Colors.transparent),
         title: _title,
         home: AuthenticationWrapper(),
       ),

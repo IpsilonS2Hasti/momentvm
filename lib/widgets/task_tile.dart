@@ -39,8 +39,38 @@ class TaskTile extends StatelessWidget {
           ),
           height: 75,
           child: Center(
-            child: Text(
-                segment.tasks[index].title + " id:" + segment.tasks[index].id),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 10),
+                    child: Text(
+                      segment.tasks[index].title,
+                      style: segment.tasks[index].isCompleted
+                          ? TextStyle(
+                              color: Colors.black38,
+                              decoration: TextDecoration.lineThrough,
+                            )
+                          : TextStyle(),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      segment.tasks[index].isCompleted =
+                          !segment.tasks[index].isCompleted;
+                      segment.updateTask(segment.tasks[index]);
+                    },
+                    icon: segment.tasks[index].isCompleted
+                        ? const Icon(
+                            Icons.check_circle_outline_outlined,
+                            color: Colors.black54,
+                          )
+                        : const Icon(
+                            Icons.circle_outlined,
+                            color: Colors.black54,
+                          ),
+                  )
+                ]),
           ),
         ),
       ),

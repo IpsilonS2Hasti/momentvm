@@ -100,5 +100,28 @@
       loadMainDartJs();
     }
   </script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script defer src="main.dart.js" type="application/javascript"></script>
+
+    <!-- Firebase Configuration -->
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyAmPVaQtU6vlMZjHrhLLYL7vA0W_0swvio",
+        authDomain: "momentvm-869ba.firebaseapp.com",
+        databaseURL: "https://momentvm-869ba-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "momentvm-869ba",
+        storageBucket: "momentvm-869ba.appspot.com",
+        messagingSenderId: "149095880750",
+        appId: "1:149095880750:web:1df85c8ab5a6d373bb67bf",
+        measurementId: "G-VHH9JZ95CW"
+  };
+  
+  
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
 </body>
 </html>

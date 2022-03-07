@@ -1,9 +1,9 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:momentvm/models/day_provider.dart';
 import 'package:momentvm/widgets/custom_app_bar.dart';
+import 'package:momentvm/widgets/self_assessment_view.dart';
+import 'package:momentvm/widgets/throughout_view.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/background_switcher.dart';
@@ -38,46 +38,60 @@ class _RoutineScreenState extends State<RoutineScreen> {
   @override
   Widget build(BuildContext context) {
     final segments = Provider.of<Day>(context).segments;
-    return Scaffold(
-      appBar: CustomAppBar(
-        key: ValueKey<String>(_currentPage.toString()),
-        title: const Text(
-          'Today',
-          style: TextStyle(color: Colors.black54),
-        ),
-        backgroundColor: segments[_currentPage].listColor,
-      ),
-      body: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          BackgroundSwitcher(_currentPage),
-          Column(
-            children: [
-              Expanded(
-                //I guess Expanded() needs an axis-defining widget as it's parent
-                child: PageView.builder(
-                  controller: dayController,
-                  physics: const CustomPageViewScrollPhysics(),
-                  itemCount: segments.length,
-                  onPageChanged: (int page) {
-                    setState(() {
-                      _currentPage = page;
-                    });
-                  },
-                  itemBuilder: (BuildContext context, int index) {
-                    return ChangeNotifierProvider.value(
-                      value: segments[index],
-                      child: SegmentView(
-                        key: ValueKey(segments[index].name),
-                        dayController: dayController,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: CustomAppBar(
+          key: ValueKey<String>(_currentPage.toString()),
+          title: const Text(
+            'Today',
+            style: TextStyle(color: Colors.black54),
           ),
-        ],
+          backgroundColor: segments[_currentPage].listColor,
+        ),
+        body: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            BackgroundSwitcher(_currentPage),
+            Column(
+              children: [
+                Expanded(
+                  //I guess Expanded() needs an axis-defining widget as it's parent
+                  child: PageView.builder(
+                    controller: dayController,
+                    physics: const CustomPageViewScrollPhysics(),
+                    itemCount: segments.length,
+                    onPageChanged: (int page) {
+                      setState(() {
+                        _currentPage = page;
+                      });
+                    },
+                    itemBuilder: (BuildContext context, int index) {
+                      return ChangeNotifierProvider.value(
+                        value: segments[index],
+                        child: index != 4
+                            ? SegmentView(
+                                key: ValueKey(segments[index].name),
+                                dayController: dayController,
+                              )
+                            : SelfAssessmentView(
+                                key: ValueKey(segments[index].name),
+                                dayController: dayController),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+            DraggableScrollableSheet(
+              minChildSize: 0.06,
+              initialChildSize: 0.06,
+              builder: (context, scrollController) => ThroughoutView(
+                  dayController: dayController,
+                  scrollController: scrollController),
+            ),
+          ],
+        ),
       ),
     );
   }

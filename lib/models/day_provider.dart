@@ -39,12 +39,30 @@ class Day {
       uid: uid,
       index: 3,
       start: 1200,
-      end: 1440,
+      end: 1320,
       name: "Night",
       backgroundImage: "assets/N.png",
       listColor: const Color(0xFFB5A8F4),
-    )
+    ),
+    Segment(
+      uid: uid,
+      index: 4,
+      start: 0,
+      end: 0,
+      name: "Self Assessment",
+      backgroundImage: "assets/S.png",
+      listColor: const Color(0xFF6FCDF2),
+    ),
   ];
+  late final throughout = Segment(
+    uid: uid,
+    index: 3,
+    start: 0,
+    end: 0,
+    name: "Throughout",
+    backgroundImage: "assets/T.png",
+    listColor: Colors.white.withOpacity(0.7),
+  );
 
   Day(this.uid);
 
