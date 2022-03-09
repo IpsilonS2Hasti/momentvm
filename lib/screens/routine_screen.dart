@@ -38,60 +38,62 @@ class _RoutineScreenState extends State<RoutineScreen> {
   @override
   Widget build(BuildContext context) {
     final segments = Provider.of<Day>(context).segments;
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: CustomAppBar(
-          key: ValueKey<String>(_currentPage.toString()),
-          title: const Text(
-            'Today',
-            style: TextStyle(color: Colors.black54),
-          ),
-          backgroundColor: segments[_currentPage].listColor,
-        ),
-        body: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            BackgroundSwitcher(_currentPage),
-            Column(
-              children: [
-                Expanded(
-                  //I guess Expanded() needs an axis-defining widget as it's parent
-                  child: PageView.builder(
-                    controller: dayController,
-                    physics: const CustomPageViewScrollPhysics(),
-                    itemCount: segments.length,
-                    onPageChanged: (int page) {
-                      setState(() {
-                        _currentPage = page;
-                      });
-                    },
-                    itemBuilder: (BuildContext context, int index) {
-                      return ChangeNotifierProvider.value(
-                        value: segments[index],
-                        child: index != 4
-                            ? SegmentView(
-                                key: ValueKey(segments[index].name),
-                                dayController: dayController,
-                              )
-                            : SelfAssessmentView(
-                                key: ValueKey(segments[index].name),
-                                dayController: dayController),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-            DraggableScrollableSheet(
-              minChildSize: 0.06,
-              initialChildSize: 0.06,
-              builder: (context, scrollController) => ThroughoutView(
-                  dayController: dayController,
-                  scrollController: scrollController),
+    return Scaffold(
+      appBar: CustomAppBar(
+        key: ValueKey<String>(_currentPage.toString()),
+        title: Row(
+          children: const [
+            Icon(Icons.format_list_numbered_rtl_rounded, color: Colors.black54),
+            Text(
+              ' My Routine',
+              style: TextStyle(color: Colors.black54),
             ),
           ],
         ),
+        backgroundColor: segments[_currentPage].listColor,
+      ),
+      body: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          BackgroundSwitcher(_currentPage),
+          Column(
+            children: [
+              Expanded(
+                //I guess Expanded() needs an axis-defining widget as it's parent
+                child: PageView.builder(
+                  controller: dayController,
+                  physics: const CustomPageViewScrollPhysics(),
+                  itemCount: segments.length,
+                  onPageChanged: (int page) {
+                    setState(() {
+                      _currentPage = page;
+                    });
+                  },
+                  itemBuilder: (BuildContext context, int index) {
+                    return ChangeNotifierProvider.value(
+                      value: segments[index],
+                      child: index != 4
+                          ? SegmentView(
+                              key: ValueKey(segments[index].name),
+                              dayController: dayController,
+                            )
+                          : SelfAssessmentView(
+                              key: ValueKey(segments[index].name),
+                              dayController: dayController),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+          DraggableScrollableSheet(
+            minChildSize: 0.06,
+            initialChildSize: 0.06,
+            builder: (context, scrollController) => ThroughoutView(
+                dayController: dayController,
+                scrollController: scrollController),
+          ),
+        ],
       ),
     );
   }

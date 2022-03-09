@@ -12,7 +12,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       : super(key: key);
 
   @override
-  Size get preferredSize => Size.fromHeight(92.0);
+  Size get preferredSize => Size.fromHeight(56.0);
 
   @override
   Widget build(BuildContext context) {
@@ -23,40 +23,34 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         title: title,
         backgroundColor: backgroundColor,
         actions: [
+          Container(
+            margin: EdgeInsets.all(7),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: Color.fromARGB(18, 0, 0, 0),
+            ),
+            child: TextButton(
+              onPressed: () {},
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.star,
+                    color: Colors.black54,
+                    size: 26,
+                  ),
+                  Text(
+                    " Progress",
+                    style: TextStyle(color: Colors.black54, fontSize: 18),
+                  )
+                ],
+              ),
+            ),
+          ),
           IconButton(
             onPressed: () => context.read<AuthenticationService>().signOut(),
-            icon: Icon(
-              Icons.logout,
-              color: Colors.black54,
-            ),
+            icon: Icon(Icons.logout, color: Colors.black54),
           )
         ],
-        bottom: TabBar(tabs: [
-          Tab(
-            child: Row(children: [
-              Icon(
-                Icons.format_list_numbered_rtl_rounded,
-                color: Colors.black54,
-              ),
-              Text(
-                " My Routine",
-                style: TextStyle(color: Colors.black54),
-              ),
-            ]),
-          ),
-          Tab(
-            child: Row(children: [
-              Icon(
-                Icons.star,
-                color: Colors.black54,
-              ),
-              Text(
-                " Progress",
-                style: TextStyle(color: Colors.black54),
-              ),
-            ]),
-          ),
-        ]),
       ),
     );
   }

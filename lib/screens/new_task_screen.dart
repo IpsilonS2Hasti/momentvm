@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:momentvm/models/task.dart';
 import 'package:http/http.dart' as http;
+import 'package:momentvm/widgets/paged_task_list_view.dart';
 import 'package:momentvm/widgets/task_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +24,9 @@ class NewTaskScreen extends StatefulWidget {
 class _NewTaskScreenState extends State<NewTaskScreen> {
   final titleController = TextEditingController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  ScrollController scrollController = ScrollController();
+  final searchController = TextEditingController();
+  String searchPrefs = "";
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +48,10 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
             fit: BoxFit.cover,
           ),
         ),
-        child: ListView(
+        child: Column(
           children: [
             Container(
-              margin: const EdgeInsets.all(16),
+              margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
               child: ClipRRect(
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
@@ -84,38 +88,63 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                 borderRadius: BorderRadius.circular(24),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.all(16),
-              child: ClipRRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 8, bottom: 24),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24),
-                      color: widget.segment.listColor.withOpacity(0.5),
-                    ),
-                    child: Column(children: [
-                      buildSearchbar(),
-                      buildHeader(),
-                      FutureBuilder(
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            var recTasks = snapshot.data as List;
-                            return Column(
-                                children: recTasks
-                                    .map((doc) => buildRecItem(doc))
-                                    .toList());
-                          }
-                          return Text("Loading!");
-                        },
-                        future: getRecTasks(),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
+                      bottomLeft: Radius.zero),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 8, bottom: 0),
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(24),
+                            topRight: Radius.circular(24),
+                            bottomLeft: Radius.zero),
+                        color: widget.segment.listColor.withOpacity(0.5),
                       ),
-                    ]),
+                      child: Column(children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20.0),
+                          child: SizedBox(
+                            width: 220,
+                            height: 40,
+                            child: TextField(
+                              controller: searchController,
+                              textAlignVertical: TextAlignVertical.center,
+                              decoration: InputDecoration(
+                                contentPadding:
+                                    const EdgeInsets.only(bottom: 4, right: 6),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                prefixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        searchPrefs = searchController.text;
+                                        print(searchPrefs);
+                                      });
+                                    },
+                                    icon: Icon(Icons.search)),
+                                filled: true,
+                              ),
+                            ),
+                          ),
+                        ),
+                        buildHeader(),
+                        Expanded(
+                          child: PagedTaskListView(
+                              searchPref: searchPrefs, segment: widget.segment),
+                        )
+                      ]),
+                    ),
                   ),
                 ),
-                borderRadius: BorderRadius.circular(24),
               ),
             ),
           ],
@@ -124,74 +153,10 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     );
   }
 
-  Future<List> getRecTasks() async {
-    final QuerySnapshot querySnapshot =
-        await firestore.collection("published_tasks").get();
-    return querySnapshot.docs.toList();
-  }
-
-  Widget buildRecItem(dynamic doc) {
-    return Material(
-      color: const Color(0x00000000),
-      child: InkWell(
-        onTap: () {},
-        child: Container(
-          decoration: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(width: 1.5, color: Color(0x17000000)),
-            ),
-          ),
-          height: 75,
-          child: Center(
-            child: Row(children: [
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text(
-                  doc["icon"],
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 10),
-                child: Text(
-                  doc["title"],
-                ),
-              ),
-            ]),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildSearchbar() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(24),
-      child: Container(
-        padding: EdgeInsets.only(right: 15, left: 5),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          color: Color.fromARGB(20, 0, 0, 0),
-        ),
-        width: 200,
-        height: 32,
-        child: Row(children: [
-          Icon(Icons.search),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 2),
-              child: TextField(),
-            ),
-          ),
-        ]),
-      ),
-    );
-  }
-
   Widget buildHeader() {
     //make header widget
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(
             width: 1.5,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:momentvm/models/task.dart';
@@ -22,6 +23,7 @@ class TaskScreen extends StatefulWidget {
 class _TaskScreenState extends State<TaskScreen> {
   late QuillController notesController;
   final titleController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   late String dropdownValue;
 
   @override
@@ -43,9 +45,14 @@ class _TaskScreenState extends State<TaskScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Today',
-          style: TextStyle(color: Colors.black54),
+        title: Row(
+          children: const [
+            Icon(Icons.format_list_numbered_rtl_rounded, color: Colors.black54),
+            Text(
+              ' My Routine',
+              style: TextStyle(color: Colors.black54),
+            ),
+          ],
         ),
         iconTheme: const IconThemeData(
           color: Colors.black54,
@@ -65,7 +72,7 @@ class _TaskScreenState extends State<TaskScreen> {
           child: ListView(
             children: [
               Container(
-                margin: const EdgeInsets.all(16),
+                margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                 child: ClipRRect(
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
@@ -78,11 +85,30 @@ class _TaskScreenState extends State<TaskScreen> {
                       ),
                       child: Column(
                         children: [
-                          TextField(
-                            decoration: const InputDecoration(
-                              labelText: "Title",
-                            ),
-                            controller: titleController,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Form(
+                                  key: _formKey,
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'The title must not be empty';
+                                      }
+                                      if (!value.contains(RegExp(
+                                          r'^(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])'))) {
+                                        return 'The title of a published task must begin with an emoji';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: const InputDecoration(
+                                      labelText: "Title",
+                                    ),
+                                    controller: titleController,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 24),
                           Row(
@@ -138,16 +164,69 @@ class _TaskScreenState extends State<TaskScreen> {
                             },
                             child: const Text('Save Changes'),
                           ),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              textStyle: const TextStyle(fontSize: 18),
-                            ),
-                            onPressed: () {
-                              widget.segment.deleteTask(task);
-                              Navigator.pop(context, {"newSegment": selSeg});
-                            },
-                            child: const Text('Delete Task',
-                                style: TextStyle(color: Colors.redAccent)),
+                          Divider(
+                            height: 3,
+                            thickness: 1,
+                            indent: 55,
+                            endIndent: 55,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                  textStyle: const TextStyle(fontSize: 18),
+                                ),
+                                onPressed: () {
+                                  widget.segment.deleteTask(task);
+                                  Navigator.pop(
+                                      context, {"newSegment": selSeg});
+                                },
+                                child: const Text('Delete',
+                                    style: TextStyle(color: Colors.redAccent)),
+                              ),
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                  textStyle: const TextStyle(fontSize: 18),
+                                ),
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    FirebaseFirestore firestore =
+                                        FirebaseFirestore.instance;
+                                    final QuerySnapshot querySnapshot =
+                                        await firestore
+                                            .collection("published_tasks")
+                                            .get();
+                                    for (dynamic element
+                                        in querySnapshot.docs.toList()) {
+                                      if (element["title"] ==
+                                          titleController.text) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Such a Task already exists!')),
+                                        );
+                                        return;
+                                      }
+                                    }
+                                    var newTaskRef = firestore
+                                        .collection('/published_tasks')
+                                        .doc();
+                                    newTaskRef.set({
+                                      "title": titleController.text,
+                                      "popularity": 1
+                                    });
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text('Processing Data')),
+                                    );
+                                  }
+                                },
+                                child: const Text('Publish',
+                                    style: TextStyle(color: Colors.deepPurple)),
+                              ),
+                            ],
                           ),
                         ],
                       ),

@@ -43,6 +43,7 @@ dependencies:
   firebase_auth: ^3.3.9
   firebase_analytics: ^9.1.2
   givestarreviews: ^1.0.2
+  infinite_scroll_pagination: ^3.1.0
 
 dev_dependencies:
   flutter_test:
