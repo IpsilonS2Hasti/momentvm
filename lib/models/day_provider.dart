@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'segment_provider.dart';
 import 'task.dart';
 
-class Day {
+class Day with ChangeNotifier {
   String uid;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   late final List<Segment> _segments = [
@@ -53,20 +53,55 @@ class Day {
       backgroundImage: "assets/S.png",
       listColor: const Color(0xFF6FCDF2),
     ),
+    Segment(
+      uid: uid,
+      index: 5,
+      start: 0,
+      end: 0,
+      name: "Archive",
+      backgroundImage: "assets/T.png",
+      listColor: const Color(0xFFCFE6F7),
+    ),
   ];
-  late final throughout = Segment(
-    uid: uid,
-    index: 3,
-    start: 0,
-    end: 0,
-    name: "Throughout",
-    backgroundImage: "assets/T.png",
-    listColor: Colors.white.withOpacity(0.7),
-  );
 
-  Day(this.uid);
+  bool dayEnd = false;
+
+  Day(this.uid) {
+    DateTime now = DateTime.now();
+    final curT = now.hour * 60 + now.minute;
+    if (curT >= _segments[0].start) {
+      dayEnd = false;
+    }
+    if (curT >= _segments[3].end) {
+      print("Day has ended!");
+      dayEnd = true;
+    }
+    try {
+      firestore.collection('/users/$uid/assessments').get().then((value) {
+        var date = new DateTime.now();
+        final curT = "${date.year}-${date.month}-${date.day}";
+        var assessList = value.docs.toList();
+        for (var assessment in assessList) {
+          if (assessment.data()["date"] == curT) dayEnd = false;
+        }
+      });
+    } on StateError catch (e) {
+      print('No collection exists!');
+    }
+  }
 
   List<Segment> get segments {
     return [..._segments];
+  }
+
+  void endDay() async {
+    dayEnd = true;
+    await Future.delayed(const Duration(seconds: 2));
+    notifyListeners();
+  }
+
+  void beginDay() async {
+    dayEnd = false;
+    notifyListeners();
   }
 }

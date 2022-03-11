@@ -32,14 +32,14 @@ class MyApp extends StatelessWidget {
               context.read<AuthenticationService>().authStateChanges,
           initialData: null,
         ),
-        Provider(
+        ChangeNotifierProvider(
           create: (context) => Day(context
               .read<User?>()!
               .uid), //We need to use the provided context because it's the context of the providers nested after one another
         ),
       ],
       child: MaterialApp(
-        theme: ThemeData(canvasColor: Colors.transparent),
+        theme: ThemeData(),
         title: _title,
         home: AuthenticationWrapper(),
       ),

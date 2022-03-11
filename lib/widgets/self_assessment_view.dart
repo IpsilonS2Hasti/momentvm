@@ -1,8 +1,10 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:givestarreviews/givestarreviews.dart';
+import 'package:momentvm/models/day_provider.dart';
 import 'package:momentvm/models/task.dart';
 import 'package:momentvm/screens/new_task_screen.dart';
 import 'package:momentvm/screens/task_screen.dart';
@@ -13,15 +15,25 @@ import '../models/segment_provider.dart';
 import '../screens/new_task_screen.dart';
 import './time_tracker.dart';
 
-class SelfAssessmentView extends StatelessWidget {
+class SelfAssessmentView extends StatefulWidget {
   final PageController dayController;
 
   const SelfAssessmentView({Key? key, required this.dayController})
       : super(key: key);
 
   @override
+  State<SelfAssessmentView> createState() => _SelfAssessmentViewState();
+}
+
+class _SelfAssessmentViewState extends State<SelfAssessmentView> {
+  int consistency = 0;
+  int motivation = 0;
+  int productivity = 0;
+
+  @override
   Widget build(BuildContext context) {
     final segment = Provider.of<Segment>(context);
+    final day = Provider.of<Day>(context);
     return Container(
       padding: EdgeInsets.symmetric(vertical: 80),
       child: Column(
@@ -31,7 +43,7 @@ class SelfAssessmentView extends StatelessWidget {
               margin: const EdgeInsets.only(
                 left: 16,
                 right: 16,
-                bottom: 16,
+                bottom: 210,
               ),
               child: ClipRRect(
                 child: BackdropFilter(
@@ -48,31 +60,63 @@ class SelfAssessmentView extends StatelessWidget {
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 35),
                             child: GiveStarReviews(
-                              spaceBetween: 50,
+                              spaceBetween: 45,
                               starData: [
                                 GiveStarData(
-                                  text: 'Consistency',
-                                  onChanged: (rate) {},
+                                  value: consistency,
+                                  text: '💪 Consistency',
+                                  onChanged: (rate) {
+                                    setState(() {
+                                      consistency = rate;
+                                    });
+                                  },
                                 ),
                                 GiveStarData(
-                                  text: 'Motivation',
-                                  onChanged: (rate) {},
+                                  value: motivation,
+                                  text: '😤 Motivation',
+                                  onChanged: (rate) {
+                                    setState(() {
+                                      motivation = rate;
+                                    });
+                                  },
                                 ),
                                 GiveStarData(
-                                  text: 'Productivity',
-                                  onChanged: (rate) {},
+                                  value: productivity,
+                                  text: '👨‍💼 Productivity',
+                                  onChanged: (rate) {
+                                    setState(() {
+                                      productivity = rate;
+                                    });
+                                  },
                                 ),
                               ],
                             ),
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(bottom: 50),
+                          padding: EdgeInsets.only(bottom: 30),
                           child: TextButton(
                             style: TextButton.styleFrom(
                               textStyle: const TextStyle(fontSize: 24),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              var uid = context.read<User>().uid;
+                              FirebaseFirestore firestore =
+                                  FirebaseFirestore.instance;
+                              var newTaskRef = firestore
+                                  .collection('/users/$uid/assessments')
+                                  .doc();
+                              var date = new DateTime.now();
+                              final curT =
+                                  "${date.year}-${date.month}-${date.day}";
+                              newTaskRef.set({
+                                "consistency": consistency,
+                                "motivation": motivation,
+                                "productivity": productivity,
+                                "date": curT,
+                              });
+                              day.beginDay();
+                            },
                             child: const Text(
                               'Submit',
                               style: TextStyle(color: Colors.black54),

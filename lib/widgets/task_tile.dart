@@ -28,7 +28,8 @@ class TaskTile extends StatelessWidget {
               index: index,
             ),
           ));
-          if (newSeg != null)
+          print(newSeg['newSegment'].name);
+          if (newSeg != null && newSeg['newSegment'].index != 5)
             dayController.jumpToPage(newSeg['newSegment'].index);
         },
         child: Container(
@@ -54,22 +55,23 @@ class TaskTile extends StatelessWidget {
                           : TextStyle(),
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      segment.tasks[index].isCompleted =
-                          !segment.tasks[index].isCompleted;
-                      segment.updateTask(segment.tasks[index]);
-                    },
-                    icon: segment.tasks[index].isCompleted
-                        ? const Icon(
-                            Icons.check_circle_outline_outlined,
-                            color: Colors.black54,
-                          )
-                        : const Icon(
-                            Icons.circle_outlined,
-                            color: Colors.black54,
-                          ),
-                  )
+                  if (segment.index != 5)
+                    IconButton(
+                      onPressed: () {
+                        segment.tasks[index].isCompleted =
+                            !segment.tasks[index].isCompleted;
+                        segment.updateTask(segment.tasks[index]);
+                      },
+                      icon: segment.tasks[index].isCompleted
+                          ? const Icon(
+                              Icons.check_circle_outline_outlined,
+                              color: Colors.black54,
+                            )
+                          : const Icon(
+                              Icons.circle_outlined,
+                              color: Colors.black54,
+                            ),
+                    )
                 ]),
           ),
         ),

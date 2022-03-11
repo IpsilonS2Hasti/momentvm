@@ -1,19 +1,19 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:momentvm/screens/sign_up_page.dart';
+import 'package:momentvm/screens/sign_in_page.dart';
 import 'package:provider/provider.dart';
 
 import '../models/authentication_service.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({Key? key}) : super(key: key);
 
   @override
-  _SignInPageState createState() => _SignInPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
@@ -31,7 +31,7 @@ class _SignInPageState extends State<SignInPage> {
             Container(
               padding: EdgeInsets.only(left: 35, top: 110),
               child: Text(
-                'Welcome\nBack',
+                'Nice to meet you!',
                 style: TextStyle(color: Colors.white, fontSize: 33),
               ),
             ),
@@ -86,7 +86,7 @@ class _SignInPageState extends State<SignInPage> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      'Sign in',
+                                      'Sign up',
                                       style: TextStyle(
                                           fontSize: 27,
                                           fontWeight: FontWeight.w700),
@@ -100,13 +100,14 @@ class _SignInPageState extends State<SignInPage> {
                                           onPressed: () {
                                             context
                                                 .read<AuthenticationService>()
-                                                .signIn(
+                                                .signUp(
                                                   email: emailController.text
                                                       .trim(),
                                                   password: passwordController
                                                       .text
                                                       .trim(),
                                                 );
+                                            Navigator.of(context).pop();
                                           },
                                           icon: Icon(
                                             Icons.arrow_forward,
@@ -117,10 +118,6 @@ class _SignInPageState extends State<SignInPage> {
                                 SizedBox(
                                   height: 20,
                                 ),
-                                Container(
-                                  child: Text(
-                                      "Данни за тестови потребител с история от няколко дни:\nemail: test@gmail.com\npassword: test123"),
-                                ),
                                 SizedBox(
                                   height: 40,
                                 ),
@@ -130,19 +127,12 @@ class _SignInPageState extends State<SignInPage> {
                                   children: [
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (_) => SignUpPage(),
-                                          ),
-                                        );
+                                        Navigator.of(context).pop();
                                       },
-                                      child: Text(
-                                        'Sign Up',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                            color: Color(0xffF6A1B8)
-                                                .withOpacity(0.7),
-                                            fontSize: 18),
+                                      child: Icon(
+                                        Icons.arrow_back,
+                                        size: 32,
+                                        color: Color(0xffF6A1B8),
                                       ),
                                       style: ButtonStyle(),
                                     ),

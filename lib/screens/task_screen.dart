@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:momentvm/models/task.dart';
@@ -129,12 +130,15 @@ class _TaskScreenState extends State<TaskScreen> {
                                   color: Colors.black26,
                                 ),
                                 onChanged: (String? newValue) {
+                                  print(newValue);
                                   setState(() {
                                     dropdownValue = newValue!;
                                   });
                                 },
                                 items: [
                                   ...segments
+                                      .where((e) => e.index != 4)
+                                      .toList()
                                 ].map<DropdownMenuItem<String>>((Segment seg) {
                                   return DropdownMenuItem<String>(
                                     value: seg.index.toString(),
@@ -155,6 +159,9 @@ class _TaskScreenState extends State<TaskScreen> {
                                   notesController.document.toDelta().toJson());
                               widget.segment.updateTask(task);
                               if (widget.segment != selSeg) {
+                                if (selSeg.index == 5) {
+                                  task.isCompleted = false;
+                                }
                                 widget.segment.tasks.remove(task);
                                 widget.segment.updateSegment();
                                 selSeg.tasks.insert(0, task);
@@ -164,7 +171,7 @@ class _TaskScreenState extends State<TaskScreen> {
                             },
                             child: const Text('Save Changes'),
                           ),
-                          Divider(
+                          const Divider(
                             height: 3,
                             thickness: 1,
                             indent: 55,
@@ -210,12 +217,17 @@ class _TaskScreenState extends State<TaskScreen> {
                                         return;
                                       }
                                     }
+                                    var uid = context.read<User>().uid;
                                     var newTaskRef = firestore
                                         .collection('/published_tasks')
                                         .doc();
                                     newTaskRef.set({
                                       "title": titleController.text,
                                       "popularity": 1
+                                    });
+                                    firestore.doc('/users/$uid').update({
+                                      "Published":
+                                          FieldValue.arrayUnion([newTaskRef])
                                     });
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(

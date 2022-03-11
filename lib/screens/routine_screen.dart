@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:momentvm/models/day_provider.dart';
 import 'package:momentvm/widgets/custom_app_bar.dart';
+import 'package:momentvm/widgets/panel_view.dart';
 import 'package:momentvm/widgets/self_assessment_view.dart';
 import 'package:momentvm/widgets/throughout_view.dart';
 import 'package:provider/provider.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../widgets/background_switcher.dart';
 import '../widgets/segment_view.dart';
@@ -37,7 +39,8 @@ class _RoutineScreenState extends State<RoutineScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final segments = Provider.of<Day>(context).segments;
+    final day = Provider.of<Day>(context);
+    final segments = day.segments;
     return Scaffold(
       appBar: CustomAppBar(
         key: ValueKey<String>(_currentPage.toString()),
@@ -51,49 +54,56 @@ class _RoutineScreenState extends State<RoutineScreen> {
           ],
         ),
         backgroundColor: segments[_currentPage].listColor,
+        bgImage: segments[_currentPage].backgroundImage,
       ),
-      body: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          BackgroundSwitcher(_currentPage),
-          Column(
-            children: [
-              Expanded(
-                //I guess Expanded() needs an axis-defining widget as it's parent
-                child: PageView.builder(
-                  controller: dayController,
-                  physics: const CustomPageViewScrollPhysics(),
-                  itemCount: segments.length,
-                  onPageChanged: (int page) {
-                    setState(() {
-                      _currentPage = page;
-                    });
-                  },
-                  itemBuilder: (BuildContext context, int index) {
-                    return ChangeNotifierProvider.value(
-                      value: segments[index],
-                      child: index != 4
-                          ? SegmentView(
-                              key: ValueKey(segments[index].name),
-                              dayController: dayController,
-                            )
-                          : SelfAssessmentView(
-                              key: ValueKey(segments[index].name),
-                              dayController: dayController),
-                    );
-                  },
+      body: SlidingUpPanel(
+        body: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            BackgroundSwitcher(_currentPage),
+            Column(
+              children: [
+                Expanded(
+                  //I guess Expanded() needs an axis-defining widget as it's parent
+                  child: PageView.builder(
+                    controller: dayController,
+                    physics: const CustomPageViewScrollPhysics(),
+                    itemCount: segments.length - (day.dayEnd ? 1 : 2),
+                    onPageChanged: (int page) {
+                      setState(() {
+                        _currentPage = page;
+                      });
+                    },
+                    itemBuilder: (BuildContext context, int index) {
+                      return ChangeNotifierProvider.value(
+                        value: segments[index],
+                        child: index != 4
+                            ? SegmentView(
+                                key: ValueKey(segments[index].name),
+                                dayController: dayController,
+                              )
+                            : SelfAssessmentView(
+                                key: ValueKey(segments[index].name),
+                                dayController: dayController),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-          DraggableScrollableSheet(
-            minChildSize: 0.06,
-            initialChildSize: 0.06,
-            builder: (context, scrollController) => ThroughoutView(
-                dayController: dayController,
-                scrollController: scrollController),
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
+        minHeight: 35,
+        maxHeight: 565,
+        color: Colors.white54,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
+          bottomLeft: Radius.zero,
+        ),
+        panel: PanelView(
+          dayController: dayController,
+        ),
       ),
     );
   }

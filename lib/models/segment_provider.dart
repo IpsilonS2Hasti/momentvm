@@ -103,5 +103,6 @@ class Segment with ChangeNotifier {
       name:
           tasks.map((e) => firestore.doc('/users/$uid/tasks/${e.id}')).toList(),
     });
+    notifyListeners();
   }
 }

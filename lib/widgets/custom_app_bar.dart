@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:momentvm/screens/progress_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'package:momentvm/models/authentication_service.dart';
@@ -6,9 +7,13 @@ import 'package:momentvm/models/authentication_service.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget title;
   final Color backgroundColor;
+  final String bgImage;
 
   const CustomAppBar(
-      {Key? key, required this.title, required this.backgroundColor})
+      {Key? key,
+      required this.title,
+      required this.backgroundColor,
+      required this.bgImage})
       : super(key: key);
 
   @override
@@ -30,7 +35,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               color: Color.fromARGB(18, 0, 0, 0),
             ),
             child: TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => ProgressScreen(
+                    bgColor: backgroundColor,
+                    bgImage: bgImage,
+                  ),
+                ));
+              },
               child: Row(
                 children: [
                   Icon(

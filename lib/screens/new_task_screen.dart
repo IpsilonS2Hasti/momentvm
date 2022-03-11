@@ -32,9 +32,14 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Today',
-          style: TextStyle(color: Colors.black54),
+        title: Row(
+          children: const [
+            Icon(Icons.format_list_numbered_rtl_rounded, color: Colors.black54),
+            Text(
+              ' My Routine',
+              style: TextStyle(color: Colors.black54),
+            ),
+          ],
         ),
         iconTheme: const IconThemeData(
           color: Colors.black54,

@@ -44,6 +44,8 @@ dependencies:
   firebase_analytics: ^9.1.2
   givestarreviews: ^1.0.2
   infinite_scroll_pagination: ^3.1.0
+  sliding_up_panel: ^2.0.0+1
+  fl_chart: ^0.45.1
 
 dev_dependencies:
   flutter_test:
