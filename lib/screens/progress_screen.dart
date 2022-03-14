@@ -70,15 +70,15 @@ class _ProgressScreenState extends State<ProgressScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Consistency",
+                                "💪 Consistency",
                                 style: TextStyle(color: Colors.red),
                               ),
                               Text(
-                                "Motivation",
+                                "😤 Motivation",
                                 style: TextStyle(color: Colors.blue),
                               ),
                               Text(
-                                "Productivity",
+                                "👨‍💼 Productivity",
                                 style: TextStyle(color: Colors.purple),
                               ),
                             ],

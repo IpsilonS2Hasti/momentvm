@@ -23,34 +23,31 @@ class Segment with ChangeNotifier {
     required this.backgroundImage,
     required this.listColor,
   }) {
-    firestore.doc('/users/$uid').get().then(
-      (value) {
-        try {
-          List refArr = value.get(FieldPath([name]));
-          print(refArr);
-          for (int i = 0; i < refArr.length; i++) {
-            refArr[i].get().then(
-              (value) {
-                tasks.add(Task(
-                  id: value.id,
-                  title: value.get("title"),
-                  notes: value.get("notes"),
-                  isCompleted: value.get("isCompleted"),
-                ));
-                notifyListeners();
-              },
-            );
-          }
-        } on StateError catch (e) {
-          print('No nested field exists!');
-        }
-      },
-    );
+    initTasks();
   }
 
   // List<Task> get tasks {
   //   return _tasks; //You can mutate individual tasks however, as it returns a new list containing refrences to the them
   // }
+
+  Future<void> initTasks() async {
+    var docSnap = await firestore.doc('/users/$uid').get();
+    try {
+      List refArr = await docSnap.get(FieldPath([name]));
+      for (int i = 0; i < refArr.length; i++) {
+        var value = await refArr[i].get();
+        tasks.add(Task(
+          id: value.id,
+          title: value.get("title"),
+          notes: value.get("notes"),
+          isCompleted: value.get("isCompleted"),
+        ));
+      }
+      notifyListeners();
+    } on StateError catch (e) {
+      print('No nested field exists!');
+    }
+  }
 
   void updateTask(Task newTask) {
     firestore.doc('/users/$uid/tasks/${newTask.id}').update({

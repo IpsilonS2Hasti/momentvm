@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:momentvm/screens/progress_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:momentvm/models/authentication_service.dart';
 
@@ -60,8 +61,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           IconButton(
             onPressed: () => context.read<AuthenticationService>().signOut(),
+            icon: Icon(Icons.download, color: Colors.black54),
+          ),
+          IconButton(
+            onPressed: () => context.read<AuthenticationService>().signOut(),
             icon: Icon(Icons.logout, color: Colors.black54),
-          )
+          ),
         ],
       ),
     );
