@@ -46,114 +46,124 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
         ),
         backgroundColor: widget.segment.listColor,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(widget.segment.backgroundImage),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: ClipRRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24),
-                      color: widget.segment.listColor.withOpacity(0.5),
-                    ),
-                    child: Column(children: [
-                      TextField(
-                        decoration: const InputDecoration(
-                          labelText: "Title",
-                        ),
-                        controller: titleController,
-                      ),
-                      const SizedBox(height: 24),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          textStyle: const TextStyle(fontSize: 20),
-                        ),
-                        onPressed: () {
-                          String curTitle = titleController.text;
-                          if (curTitle.length > 80)
-                            curTitle = curTitle..substring(0, 80);
-                          widget.segment.addTask(title: curTitle);
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Create Task'),
-                      ),
-                    ]),
-                  ),
-                ),
-                borderRadius: BorderRadius.circular(24),
-              ),
+      body: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentNode = FocusScope.of(context);
+          if (currentNode.focusedChild != null &&
+              !currentNode.hasPrimaryFocus) {
+            FocusManager.instance.primaryFocus!.unfocus();
+          }
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(widget.segment.backgroundImage),
+              fit: BoxFit.cover,
             ),
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+          ),
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                 child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      topRight: Radius.circular(24),
-                      bottomLeft: Radius.zero),
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                     child: Container(
-                      padding: const EdgeInsets.only(top: 8, bottom: 0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 8),
                       decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(24),
-                            topRight: Radius.circular(24),
-                            bottomLeft: Radius.zero),
+                        borderRadius: BorderRadius.circular(24),
                         color: widget.segment.listColor.withOpacity(0.5),
                       ),
                       child: Column(children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(20.0),
-                          child: SizedBox(
-                            width: 220,
-                            height: 40,
-                            child: TextField(
-                              controller: searchController,
-                              textAlignVertical: TextAlignVertical.center,
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    const EdgeInsets.only(bottom: 4, right: 6),
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.circular(20.0),
+                        TextField(
+                          decoration: const InputDecoration(
+                            labelText: "Title",
+                          ),
+                          controller: titleController,
+                        ),
+                        const SizedBox(height: 24),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            textStyle: const TextStyle(fontSize: 20),
+                          ),
+                          onPressed: () {
+                            String curTitle = titleController.text;
+                            if (curTitle.length > 80)
+                              curTitle = curTitle..substring(0, 80);
+                            widget.segment.addTask(title: curTitle);
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Create Task'),
+                        ),
+                      ]),
+                    ),
+                  ),
+                  borderRadius: BorderRadius.circular(24),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                        bottomLeft: Radius.zero),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                      child: Container(
+                        padding: const EdgeInsets.only(top: 8, bottom: 0),
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(24),
+                              topRight: Radius.circular(24),
+                              bottomLeft: Radius.zero),
+                          color: widget.segment.listColor.withOpacity(0.5),
+                        ),
+                        child: Column(children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20.0),
+                            child: SizedBox(
+                              width: 220,
+                              height: 40,
+                              child: TextField(
+                                controller: searchController,
+                                textAlignVertical: TextAlignVertical.center,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.only(
+                                      bottom: 4, right: 6),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  prefixIcon: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          searchPrefs = searchController.text;
+                                          print(searchPrefs);
+                                        });
+                                      },
+                                      icon: Icon(Icons.search)),
+                                  filled: true,
                                 ),
-                                prefixIcon: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        searchPrefs = searchController.text;
-                                        print(searchPrefs);
-                                      });
-                                    },
-                                    icon: Icon(Icons.search)),
-                                filled: true,
                               ),
                             ),
                           ),
-                        ),
-                        buildHeader(),
-                        Expanded(
-                          child: PagedTaskListView(
-                              searchPref: searchPrefs, segment: widget.segment),
-                        )
-                      ]),
+                          buildHeader(),
+                          Expanded(
+                            child: PagedTaskListView(
+                                searchPref: searchPrefs,
+                                segment: widget.segment),
+                          )
+                        ]),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
