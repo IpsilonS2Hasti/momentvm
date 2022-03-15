@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:momentvm/screens/task_screen.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'dart:io' show Platform;
 
 import '../models/segment_provider.dart';
 
