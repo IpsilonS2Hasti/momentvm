@@ -88,6 +88,28 @@ class Day with ChangeNotifier {
     } on StateError catch (e) {
       print('No collection exists!');
     }
+    try {
+      firestore.doc('/users/$uid').get().then((value) {
+        var date = new DateTime.now();
+        final curT = "${date.year}-${date.month}-${date.day}";
+        var lastDay = value.get(FieldPath(["lastDay"]));
+        if (lastDay != curT) {
+          firestore.collection("/users/$uid/tasks").get().then((value) {
+            var tasks = value.docs.toList();
+            for (var task in tasks) {
+              firestore
+                  .doc("/users/$uid/tasks/${task.id}")
+                  .update({"isCompleted": false});
+            }
+          });
+        }
+        firestore.doc('/users/$uid').update({
+          "lastDay": curT,
+        });
+      });
+    } on StateError catch (e) {
+      print('No collection exists!');
+    }
   }
 
   List<Segment> get segments {

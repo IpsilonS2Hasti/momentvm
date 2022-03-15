@@ -159,6 +159,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
     var querySnap = await firestore
         .collection('/users/$uid/assessments')
         .orderBy('date')
+        .limit(30)
         .get();
     var assessList = querySnap.docs.toList();
     List<List<FlSpot>> barsData = [[], [], []];
@@ -187,6 +188,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
           maxX: barsData[0].length.toDouble(),
           minY: 0,
           maxY: 5,
+          lineTouchData: LineTouchData(enabled: false),
           gridData: FlGridData(
             show: true,
             getDrawingHorizontalLine: (value) {

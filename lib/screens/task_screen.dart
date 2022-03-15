@@ -266,13 +266,19 @@ class _TaskScreenState extends State<TaskScreen> {
                             height: 400,
                             child: Column(
                               children: [
-                                QuillToolbar.basic(
-                                  controller: notesController,
-                                  showCodeBlock: false,
-                                  showInlineCode: false,
-                                  multiRowsDisplay: false,
-                                  iconTheme: const QuillIconTheme(
-                                    iconUnselectedFillColor: Colors.transparent,
+                                Theme(
+                                  data: ThemeData(
+                                    canvasColor: Colors.transparent,
+                                  ),
+                                  child: QuillToolbar.basic(
+                                    controller: notesController,
+                                    showCodeBlock: false,
+                                    showInlineCode: false,
+                                    multiRowsDisplay: false,
+                                    iconTheme: const QuillIconTheme(
+                                      iconUnselectedFillColor:
+                                          Colors.transparent,
+                                    ),
                                   ),
                                 ),
                                 Expanded(

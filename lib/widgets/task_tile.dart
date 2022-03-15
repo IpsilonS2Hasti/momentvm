@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:momentvm/screens/task_screen.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:io' show Platform;
 
 import '../models/segment_provider.dart';
 
@@ -43,20 +45,26 @@ class TaskTile extends StatelessWidget {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 10),
-                    child: Text(
-                      segment.tasks[index].title,
-                      style: segment.tasks[index].isCompleted
-                          ? TextStyle(
-                              color: Colors.black38,
-                              decoration: TextDecoration.lineThrough,
-                            )
-                          : TextStyle(),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(left: 10),
+                      child: Text(
+                        segment.tasks[index].title,
+                        maxLines: 2,
+                        style: segment.tasks[index].isCompleted
+                            ? TextStyle(
+                                color: Colors.black38,
+                                decoration: TextDecoration.lineThrough,
+                              )
+                            : TextStyle(),
+                      ),
                     ),
                   ),
                   if (segment.index != 5)
                     IconButton(
+                      padding: kIsWeb
+                          ? EdgeInsets.only(right: 35)
+                          : EdgeInsets.only(),
                       onPressed: () {
                         segment.tasks[index].isCompleted =
                             !segment.tasks[index].isCompleted;
