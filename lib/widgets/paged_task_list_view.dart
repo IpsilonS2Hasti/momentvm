@@ -125,10 +125,13 @@ class _PagedTaskListViewState extends State<PagedTaskListView> {
           height: 75,
           child: Center(
             child: Row(children: [
-              Container(
-                margin: EdgeInsets.only(left: 10),
-                child: Text(
-                  doc["title"],
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(left: 10),
+                  child: Text(
+                    doc["title"],
+                    maxLines: 3,
+                  ),
                 ),
               ),
             ]),

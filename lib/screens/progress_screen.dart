@@ -103,46 +103,57 @@ class _ProgressScreenState extends State<ProgressScreen> {
               ),
             ),
           ),
-          Container(
-            margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            height: 300,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
-              color: widget.bgColor.withOpacity(0.7),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(24),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                child: Container(
-                  child: Column(
-                    children: [
-                      buildHeader(),
-                      FutureBuilder(
-                        future: getPubTasks(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                                  ConnectionState.done &&
-                              !snapshot.hasData) {
-                            Text("Publish a task first!");
-                          }
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            var pubTasks = snapshot.data as List;
-                            return Expanded(
-                              child: ListView.builder(
-                                itemCount: pubTasks.length,
-                                itemBuilder: (context, index) {
-                                  return buildRecItem(pubTasks[index]);
-                                },
-                              ),
-                            );
-                          }
-                          return Text("Loading");
-                        },
-                      ),
-                    ],
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
+                  bottomLeft: Radius.zero,
+                ),
+                color: widget.bgColor.withOpacity(0.7),
+              ),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
+                  bottomLeft: Radius.zero,
+                ),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                  child: Container(
+                    child: Column(
+                      children: [
+                        buildHeader(),
+                        FutureBuilder(
+                          future: getPubTasks(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                    ConnectionState.done &&
+                                !snapshot.hasData) {
+                              Text("Publish a task first!");
+                            }
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              var pubTasks = snapshot.data as List;
+                              return Expanded(
+                                child: ListView.builder(
+                                  itemCount: pubTasks.length,
+                                  itemBuilder: (context, index) {
+                                    return buildPubItem(pubTasks[index]);
+                                  },
+                                ),
+                              );
+                            }
+                            return Padding(
+                                padding: EdgeInsets.only(top: 25),
+                                child: CircularProgressIndicator());
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -242,7 +253,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
     return taskArr;
   }
 
-  Widget buildRecItem(dynamic doc) {
+  Widget buildPubItem(DocumentSnapshot doc) {
     return Material(
       color: const Color(0x00000000),
       child: Container(
@@ -257,9 +268,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
+              Expanded(
                 child: Text(
                   doc["title"],
+                  maxLines: 3,
                 ),
               ),
               Row(
@@ -270,7 +282,30 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   ),
                   Text(
                     doc["popularity"].toString(),
-                  )
+                  ),
+                  SizedBox(width: 5),
+                  Container(
+                    width: 30,
+                    child: IconButton(
+                      onPressed: () async {
+                        doc.reference.delete();
+                        var firestore = FirebaseFirestore.instance;
+                        var uid = context.read<User>().uid;
+                        var pubTasks = await getPubTasks();
+                        pubTasks.removeWhere((element) => element.id == doc.id);
+                        var newTasks =
+                            pubTasks.map((e) => e.reference).toList();
+                        var userDoc = await firestore
+                            .doc('/users/$uid')
+                            .update({"Published": newTasks});
+                        setState(() {});
+                      },
+                      icon: Icon(
+                        Icons.delete_outline_outlined,
+                        color: Color.fromARGB(146, 244, 67, 54),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],

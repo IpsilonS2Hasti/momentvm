@@ -100,6 +100,9 @@ class _TaskScreenState extends State<TaskScreen> {
                                           r'^(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])'))) {
                                         return 'The title of a published task must begin with an emoji';
                                       }
+                                      if (value.length > 80) {
+                                        return 'A title must be no more than 80 characters long';
+                                      }
                                       return null;
                                     },
                                     decoration: const InputDecoration(
@@ -154,7 +157,10 @@ class _TaskScreenState extends State<TaskScreen> {
                               textStyle: const TextStyle(fontSize: 20),
                             ),
                             onPressed: () {
-                              task.title = titleController.text;
+                              String curTitle = titleController.text;
+                              if (curTitle.length > 80)
+                                curTitle = curTitle.substring(0, 80);
+                              task.title = curTitle;
                               task.notes = jsonEncode(
                                   notesController.document.toDelta().toJson());
                               widget.segment.updateTask(task);

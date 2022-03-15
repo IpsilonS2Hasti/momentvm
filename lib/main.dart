@@ -64,8 +64,10 @@ class AuthenticationWrapper extends StatelessWidget {
           } else if (snapshot.hasData) {
             return RoutineScreen();
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Scaffold(
+              body: const Center(
+                child: CircularProgressIndicator(),
+              ),
             );
           }
         },

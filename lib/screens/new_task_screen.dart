@@ -80,9 +80,10 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                           textStyle: const TextStyle(fontSize: 20),
                         ),
                         onPressed: () {
-                          print("THE ID IS:" +
-                              widget.segment
-                                  .addTask(title: titleController.text));
+                          String curTitle = titleController.text;
+                          if (curTitle.length > 80)
+                            curTitle = curTitle..substring(0, 80);
+                          widget.segment.addTask(title: curTitle);
                           Navigator.pop(context);
                         },
                         child: const Text('Create Task'),

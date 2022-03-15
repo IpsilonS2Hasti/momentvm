@@ -50,7 +50,7 @@ class TaskTile extends StatelessWidget {
                       margin: EdgeInsets.only(left: 10),
                       child: Text(
                         segment.tasks[index].title,
-                        maxLines: 2,
+                        maxLines: 3,
                         style: segment.tasks[index].isCompleted
                             ? TextStyle(
                                 color: Colors.black38,
