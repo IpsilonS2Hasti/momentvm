@@ -5,6 +5,7 @@ import 'package:momentvm/widgets/throughout_view.dart';
 import 'package:provider/provider.dart';
 
 import '../models/day_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PanelView extends StatelessWidget {
   final PageController dayController;
@@ -39,7 +40,7 @@ class PanelView extends StatelessWidget {
               width: 75,
             )),
           ),
-          buildHeader(),
+          buildHeader(context),
           Expanded(
             child: ChangeNotifierProvider.value(
               value: segments[5],
@@ -51,7 +52,7 @@ class PanelView extends StatelessWidget {
     );
   }
 
-  Widget buildHeader() {
+  Widget buildHeader(BuildContext context) {
     //make header widget
     return Container(
       decoration: const BoxDecoration(
@@ -66,7 +67,7 @@ class PanelView extends StatelessWidget {
       width: double.infinity,
       child: Center(
         child: Text(
-          "Archive:",
+          AppLocalizations.of(context)!.archive + ":",
           textScaleFactor: 1.2,
         ),
       ),

@@ -4,12 +4,14 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:momentvm/models/task.dart';
 import 'package:provider/provider.dart';
 import '../models/day_provider.dart';
 import '../models/segment_provider.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:momentvm/utils/matchSegLoc.dart';
 
 class TaskScreen extends StatefulWidget {
   final Segment segment;
@@ -47,10 +49,10 @@ class _TaskScreenState extends State<TaskScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Row(
-          children: const [
+          children: [
             Icon(Icons.format_list_numbered_rtl_rounded, color: Colors.black54),
             Text(
-              ' My Routine',
+              AppLocalizations.of(context)!.myRoutine,
               style: TextStyle(color: Colors.black54),
             ),
           ],
@@ -102,19 +104,23 @@ class _TaskScreenState extends State<TaskScreen> {
                                     child: TextFormField(
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return 'The title must not be empty';
+                                          return AppLocalizations.of(context)!
+                                              .titleNotEmpty;
                                         }
                                         if (!value.contains(RegExp(
                                             r'^(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])'))) {
-                                          return 'The title of a published task must begin with an emoji';
+                                          return AppLocalizations.of(context)!
+                                              .titleBeginEmoji;
                                         }
                                         if (value.length > 80) {
-                                          return 'A title must be no more than 80 characters long';
+                                          return AppLocalizations.of(context)!
+                                              .titleNotOver80;
                                         }
                                         return null;
                                       },
-                                      decoration: const InputDecoration(
-                                        labelText: "Title",
+                                      decoration: InputDecoration(
+                                        labelText:
+                                            AppLocalizations.of(context)!.title,
                                       ),
                                       controller: titleController,
                                     ),
@@ -125,8 +131,8 @@ class _TaskScreenState extends State<TaskScreen> {
                             const SizedBox(height: 24),
                             Row(
                               children: [
-                                const Text(
-                                  "Reschedule:",
+                                Text(
+                                  AppLocalizations.of(context)!.reschedule,
                                   textScaleFactor: 1.2,
                                 ),
                                 const SizedBox(width: 16),
@@ -154,7 +160,8 @@ class _TaskScreenState extends State<TaskScreen> {
                                       (Segment seg) {
                                     return DropdownMenuItem<String>(
                                       value: seg.index.toString(),
-                                      child: Text(seg.name),
+                                      child:
+                                          Text(matchSegLoc(seg.name, context)),
                                     );
                                   }).toList(),
                                 ),
@@ -185,7 +192,8 @@ class _TaskScreenState extends State<TaskScreen> {
                                 }
                                 Navigator.pop(context, {"newSegment": selSeg});
                               },
-                              child: const Text('Save Changes'),
+                              child: Text(
+                                  AppLocalizations.of(context)!.saveChanges),
                             ),
                             const Divider(
                               height: 3,
@@ -205,7 +213,8 @@ class _TaskScreenState extends State<TaskScreen> {
                                     Navigator.pop(
                                         context, {"newSegment": selSeg});
                                   },
-                                  child: const Text('Delete',
+                                  child: Text(
+                                      AppLocalizations.of(context)!.delete,
                                       style:
                                           TextStyle(color: Colors.redAccent)),
                                 ),
@@ -253,7 +262,8 @@ class _TaskScreenState extends State<TaskScreen> {
                                       );
                                     }
                                   },
-                                  child: const Text('Publish',
+                                  child: Text(
+                                      AppLocalizations.of(context)!.publish,
                                       style:
                                           TextStyle(color: Colors.deepPurple)),
                                 ),
@@ -341,9 +351,9 @@ class _TaskScreenState extends State<TaskScreen> {
       width: double.infinity,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
+        children: [
           Text(
-            "Notes:",
+            AppLocalizations.of(context)!.notes,
             textScaleFactor: 1.2,
           )
         ],

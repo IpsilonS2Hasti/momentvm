@@ -8,8 +8,10 @@ import 'package:momentvm/models/day_provider.dart';
 import 'package:momentvm/models/task.dart';
 import 'package:momentvm/screens/new_task_screen.dart';
 import 'package:momentvm/screens/task_screen.dart';
+import 'package:momentvm/utils/matchSegLoc.dart';
 import 'package:momentvm/widgets/task_tile.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/segment_provider.dart';
 import '../screens/new_task_screen.dart';
@@ -58,13 +60,14 @@ class _SelfAssessmentViewState extends State<SelfAssessmentView> {
                         buildHeader(segment, context),
                         Expanded(
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 35),
+                            padding: EdgeInsets.symmetric(horizontal: 30),
                             child: GiveStarReviews(
                               spaceBetween: 45,
                               starData: [
                                 GiveStarData(
                                   value: consistency,
-                                  text: '💪 Consistency',
+                                  text:
+                                      AppLocalizations.of(context)!.consistency,
                                   onChanged: (rate) {
                                     setState(() {
                                       consistency = rate;
@@ -73,7 +76,8 @@ class _SelfAssessmentViewState extends State<SelfAssessmentView> {
                                 ),
                                 GiveStarData(
                                   value: motivation,
-                                  text: '😤 Motivation',
+                                  text:
+                                      AppLocalizations.of(context)!.motivation,
                                   onChanged: (rate) {
                                     setState(() {
                                       motivation = rate;
@@ -82,7 +86,8 @@ class _SelfAssessmentViewState extends State<SelfAssessmentView> {
                                 ),
                                 GiveStarData(
                                   value: productivity,
-                                  text: '👨‍💼 Productivity',
+                                  text: AppLocalizations.of(context)!
+                                      .productivity,
                                   onChanged: (rate) {
                                     setState(() {
                                       productivity = rate;
@@ -117,8 +122,8 @@ class _SelfAssessmentViewState extends State<SelfAssessmentView> {
                               });
                               day.beginDay();
                             },
-                            child: const Text(
-                              'Submit',
+                            child: Text(
+                              AppLocalizations.of(context)!.submit,
                               style: TextStyle(color: Colors.black54),
                             ),
                           ),
@@ -154,7 +159,7 @@ class _SelfAssessmentViewState extends State<SelfAssessmentView> {
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                segment.name + ":",
+                matchSegLoc(segment.name, context) + ":",
                 textScaleFactor: 1.3,
               )),
         ],

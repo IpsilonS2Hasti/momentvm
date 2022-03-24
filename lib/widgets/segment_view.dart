@@ -7,6 +7,8 @@ import 'package:momentvm/screens/new_task_screen.dart';
 import 'package:momentvm/screens/task_screen.dart';
 import 'package:momentvm/widgets/task_tile.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:momentvm/utils/matchSegLoc.dart';
 
 import '../models/segment_provider.dart';
 import '../screens/new_task_screen.dart';
@@ -44,7 +46,11 @@ class SegmentView extends StatelessWidget {
                         buildHeader(segment, context),
                         Expanded(
                           child: segment.tasks.isEmpty
-                              ? Text("Empty!")
+                              ? Padding(
+                                  padding: EdgeInsets.only(top: 10),
+                                  child:
+                                      Text(AppLocalizations.of(context)!.empty),
+                                )
                               : ReorderableListView.builder(
                                   itemCount: segment.tasks.length,
                                   itemBuilder:
@@ -94,7 +100,7 @@ class SegmentView extends StatelessWidget {
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                segment.name,
+                matchSegLoc(segment.name, context),
                 textScaleFactor: 1.2,
               )),
           IconButton(

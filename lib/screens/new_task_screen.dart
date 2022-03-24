@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:momentvm/widgets/paged_task_list_view.dart';
 import 'package:momentvm/widgets/task_tile.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/segment_provider.dart';
 
@@ -33,10 +34,10 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Row(
-          children: const [
+          children: [
             Icon(Icons.format_list_numbered_rtl_rounded, color: Colors.black54),
             Text(
-              ' My Routine',
+              AppLocalizations.of(context)!.myRoutine,
               style: TextStyle(color: Colors.black54),
             ),
           ],
@@ -77,8 +78,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                       ),
                       child: Column(children: [
                         TextField(
-                          decoration: const InputDecoration(
-                            labelText: "Title",
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)!.title,
                           ),
                           controller: titleController,
                         ),
@@ -94,7 +95,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                             widget.segment.addTask(title: curTitle);
                             Navigator.pop(context);
                           },
-                          child: const Text('Create Task'),
+                          child: Text(AppLocalizations.of(context)!.createTask),
                         ),
                       ]),
                     ),
@@ -184,11 +185,11 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
       width: double.infinity,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
+        children: [
           Padding(
             padding: EdgeInsets.only(left: 10),
             child: Text(
-              "Recommended:",
+              AppLocalizations.of(context)!.recommended,
               textScaleFactor: 1.2,
             ),
           )

@@ -7,6 +7,7 @@ import 'package:momentvm/widgets/self_assessment_view.dart';
 import 'package:momentvm/widgets/throughout_view.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../widgets/background_switcher.dart';
 import '../widgets/segment_view.dart';
@@ -45,10 +46,10 @@ class _RoutineScreenState extends State<RoutineScreen> {
       appBar: CustomAppBar(
         key: ValueKey<String>(_currentPage.toString()),
         title: Row(
-          children: const [
+          children: [
             Icon(Icons.format_list_numbered_rtl_rounded, color: Colors.black54),
             Text(
-              ' My Routine',
+              AppLocalizations.of(context)!.myRoutine,
               style: TextStyle(color: Colors.black54),
             ),
           ],

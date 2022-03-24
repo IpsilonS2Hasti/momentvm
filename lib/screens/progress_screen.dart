@@ -6,6 +6,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:momentvm/models/task.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProgressScreen extends StatefulWidget {
   final Color bgColor;
@@ -23,10 +24,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Row(
-          children: const [
+          children: [
             Icon(Icons.star, color: Colors.black54),
             Text(
-              ' Progress',
+              AppLocalizations.of(context)!.progress,
               style: TextStyle(color: Colors.black54),
             ),
           ],
@@ -66,22 +67,26 @@ class _ProgressScreenState extends State<ProgressScreen> {
                           SizedBox(
                             height: 20,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "💪 Consistency",
-                                style: TextStyle(color: Colors.red),
-                              ),
-                              Text(
-                                "😤 Motivation",
-                                style: TextStyle(color: Colors.blue),
-                              ),
-                              Text(
-                                "👨‍💼 Productivity",
-                                style: TextStyle(color: Colors.purple),
-                              ),
-                            ],
+                          SizedBox(
+                            width: double.infinity,
+                            child: Wrap(
+                              runSpacing: 7,
+                              alignment: WrapAlignment.spaceAround,
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context)!.consistency,
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                Text(
+                                  AppLocalizations.of(context)!.motivation,
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                                Text(
+                                  AppLocalizations.of(context)!.productivity,
+                                  style: TextStyle(color: Colors.purple),
+                                ),
+                              ],
+                            ),
                           )
                         ]);
                       }
@@ -89,12 +94,13 @@ class _ProgressScreenState extends State<ProgressScreen> {
                           !snapshot.hasData) {
                         return Container(
                           width: double.infinity,
-                          child: Text("You don't have any assessments yet!"),
+                          child: Text(
+                              AppLocalizations.of(context)!.noAssessmentsYet),
                         );
                       }
                       return Container(
                         width: double.infinity,
-                        child: Text("Loading"),
+                        child: Text(AppLocalizations.of(context)!.loading),
                       );
                     }),
                     future: getChartData(),
@@ -133,7 +139,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                             if (snapshot.connectionState ==
                                     ConnectionState.done &&
                                 !snapshot.hasData) {
-                              Text("Publish a task first!");
+                              Text(AppLocalizations.of(context)!.pubATaskFirst);
                             }
                             if (snapshot.connectionState ==
                                 ConnectionState.done) {
@@ -330,11 +336,11 @@ class _ProgressScreenState extends State<ProgressScreen> {
       width: double.infinity,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
+        children: [
           Padding(
             padding: EdgeInsets.only(left: 20),
             child: Text(
-              "Your Published Tasks:",
+              AppLocalizations.of(context)!.yourPubTasks,
               textScaleFactor: 1.2,
             ),
           )

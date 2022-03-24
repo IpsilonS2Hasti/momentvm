@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:momentvm/l10n/l10n.dart';
 import 'package:momentvm/models/authentication_service.dart';
 import 'package:momentvm/models/day_provider.dart';
 import 'package:momentvm/screens/sign_in_page.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'screens/routine_screen.dart';
 import 'models/day_provider.dart';
@@ -42,6 +45,12 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(),
         title: _title,
         home: AuthenticationWrapper(),
+        supportedLocales: L10n.all,
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:momentvm/screens/progress_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:momentvm/models/authentication_service.dart';
 
@@ -53,7 +54,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     size: 26,
                   ),
                   Text(
-                    " Progress",
+                    AppLocalizations.of(context)!.progress,
                     style: TextStyle(color: Colors.black54, fontSize: 18),
                   )
                 ],
