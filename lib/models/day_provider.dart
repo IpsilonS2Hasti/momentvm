@@ -70,7 +70,7 @@ class Day with ChangeNotifier {
     DateTime now = DateTime.now();
     final curT = now.hour * 60 + now.minute;
     if (curT >= _segments[0].start) {
-      dayEnd = false;
+      dayEnd = true;
     }
     if (curT >= _segments[3].end) {
       print("Day has ended!");

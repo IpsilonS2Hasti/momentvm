@@ -29,9 +29,9 @@ class TaskTile extends StatelessWidget {
               index: index,
             ),
           ));
-          print(newSeg['newSegment'].name);
-          if (newSeg != null && newSeg['newSegment'].index != 5)
+          if (newSeg != null) if (newSeg['newSegment'].index != 5) {
             dayController.jumpToPage(newSeg['newSegment'].index);
+          }
         },
         child: Container(
           decoration: const BoxDecoration(
