@@ -43,7 +43,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
           image: DecorationImage(
               image: AssetImage(widget.bgImage), fit: BoxFit.cover),
         ),
-        child: Column(children: [
+        child: ListView(children: [
           Container(
             margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             height: 300,
@@ -109,57 +109,46 @@ class _ProgressScreenState extends State<ProgressScreen> {
               ),
             ),
           ),
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(24),
-                  topRight: Radius.circular(24),
-                  bottomLeft: Radius.zero,
-                ),
-                color: widget.bgColor.withOpacity(0.7),
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(24),
-                  topRight: Radius.circular(24),
-                  bottomLeft: Radius.zero,
-                ),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                  child: Container(
-                    child: Column(
-                      children: [
-                        buildHeader(),
-                        FutureBuilder(
-                          future: getPubTasks(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                    ConnectionState.done &&
-                                !snapshot.hasData) {
-                              Text(AppLocalizations.of(context)!.pubATaskFirst);
-                            }
-                            if (snapshot.connectionState ==
-                                ConnectionState.done) {
-                              var pubTasks = snapshot.data as List;
-                              return Expanded(
-                                child: ListView.builder(
-                                  itemCount: pubTasks.length,
-                                  itemBuilder: (context, index) {
-                                    return buildPubItem(pubTasks[index]);
-                                  },
-                                ),
-                              );
-                            }
-                            return Padding(
-                                padding: EdgeInsets.only(top: 25),
-                                child: CircularProgressIndicator());
-                          },
-                        ),
-                      ],
-                    ),
+          Container(
+            margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              color: widget.bgColor.withOpacity(0.7),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                child: Container(
+                  padding: EdgeInsets.only(bottom: 20),
+                  child: Column(
+                    children: [
+                      buildHeader(),
+                      FutureBuilder(
+                        future: getPubTasks(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            var pubTasks = snapshot.data as List;
+                            if (pubTasks.length == 0)
+                              return Container(
+                                  padding: EdgeInsets.only(top: 15),
+                                  height: 45,
+                                  child: Text(
+                                    AppLocalizations.of(context)!.pubATaskFirst,
+                                  ));
+                            return Column(
+                              children:
+                                  pubTasks.map((e) => buildPubItem(e)).toList(),
+                            );
+                          }
+                          return Padding(
+                              padding: EdgeInsets.only(top: 25),
+                              child: CircularProgressIndicator());
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),
