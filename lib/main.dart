@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:momentvm/l10n/l10n.dart';
 import 'package:momentvm/models/authentication_service.dart';
 import 'package:momentvm/models/day_provider.dart';
+import 'package:momentvm/models/locale_provider.dart';
 import 'package:momentvm/screens/sign_in_page.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -40,18 +41,24 @@ class MyApp extends StatelessWidget {
               .read<User?>()!
               .uid), //We need to use the provided context because it's the context of the providers nested after one another
         ),
+        ChangeNotifierProvider(
+          create: (context) => LocaleProvider(),
+        ),
       ],
-      child: MaterialApp(
-        theme: ThemeData(),
-        title: _title,
-        home: AuthenticationWrapper(),
-        supportedLocales: L10n.all,
-        localizationsDelegates: [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-      ),
+      builder: (context, child) {
+        return MaterialApp(
+          theme: ThemeData(),
+          title: _title,
+          home: AuthenticationWrapper(),
+          locale: Provider.of<LocaleProvider>(context).locale,
+          supportedLocales: L10n.all,
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+        );
+      },
     );
   }
 }

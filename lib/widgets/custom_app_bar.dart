@@ -4,8 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 import 'package:momentvm/models/authentication_service.dart';
+
+import '../models/locale_provider.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget title;
@@ -73,9 +76,54 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
               icon: Icon(Icons.download, color: Colors.black54),
             ),
-          IconButton(
-            onPressed: () => context.read<AuthenticationService>().signOut(),
-            icon: Icon(Icons.logout, color: Colors.black54),
+          PopupMenuButton(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            icon: Icon(
+              Icons.settings,
+              color: Colors.black54,
+            ),
+            color: backgroundColor,
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                enabled: false,
+                child: Center(
+                  child: ToggleSwitch(
+                    cornerRadius: 16,
+                    inactiveBgColor: Colors.black26,
+                    fontSize: 16,
+                    customWidths: [50.0, 50.0],
+                    initialLabelIndex:
+                        Localizations.localeOf(context).languageCode == "bg"
+                            ? 0
+                            : 1,
+                    totalSwitches: 2,
+                    labels: ['🇧🇬', '🇺🇸'],
+                    onToggle: (index) {
+                      Locale locale = index == 0 ? Locale("bg") : Locale("en");
+                      Provider.of<LocaleProvider>(context, listen: false)
+                          .setLocale(locale);
+                    },
+                  ),
+                ),
+                value: 1,
+              ),
+              PopupMenuItem(
+                onTap: () => context.read<AuthenticationService>().signOut(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Sign out"),
+                    Padding(padding: EdgeInsets.only(right: 15)),
+                    Icon(
+                      Icons.logout,
+                      color: Colors.black54,
+                    ),
+                  ],
+                ),
+                value: 2,
+              )
+            ],
           ),
         ],
       ),
