@@ -22,12 +22,14 @@ class AuthenticationService {
   Future<String?> signUp(
       {required String email, required String password}) async {
     try {
+      var date = new DateTime.now();
+      final curT = "${date.year}-${date.month}-${date.day}";
       var newUser = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseFirestore.instance
           .collection('/users')
           .doc(newUser.user!.uid)
-          .set({"newUser": true});
+          .set({"lastDay": curT});
       return "Signed up!";
     } on FirebaseAuthException catch (e) {
       return e.message;

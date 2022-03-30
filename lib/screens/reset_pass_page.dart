@@ -14,10 +14,9 @@ class ResetPassPage extends StatefulWidget {
 }
 
 class _ResetPassState extends State<ResetPassPage> {
+  final TextEditingController emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(

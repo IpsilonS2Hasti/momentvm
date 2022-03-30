@@ -50,6 +50,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(),
           title: _title,
           home: AuthenticationWrapper(),
+          debugShowCheckedModeBanner: false,
           locale: Provider.of<LocaleProvider>(context).locale,
           supportedLocales: L10n.all,
           localizationsDelegates: [

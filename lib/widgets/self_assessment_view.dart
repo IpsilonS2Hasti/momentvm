@@ -36,108 +36,100 @@ class _SelfAssessmentViewState extends State<SelfAssessmentView> {
   Widget build(BuildContext context) {
     final segment = Provider.of<Segment>(context);
     final day = Provider.of<Day>(context);
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 80),
-      child: Column(
-        children: [
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.only(
-                left: 16,
-                right: 16,
-                bottom: 210,
-              ),
-              child: ClipRRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: segment.listColor.withOpacity(0.5),
-                    ),
-                    child: Column(
-                      children: [
-                        buildHeader(segment, context),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30),
-                            child: GiveStarReviews(
-                              spaceBetween: 45,
-                              starData: [
-                                GiveStarData(
-                                  value: consistency,
-                                  text:
-                                      AppLocalizations.of(context)!.consistency,
-                                  onChanged: (rate) {
-                                    setState(() {
-                                      consistency = rate;
-                                    });
-                                  },
-                                ),
-                                GiveStarData(
-                                  value: motivation,
-                                  text:
-                                      AppLocalizations.of(context)!.motivation,
-                                  onChanged: (rate) {
-                                    setState(() {
-                                      motivation = rate;
-                                    });
-                                  },
-                                ),
-                                GiveStarData(
-                                  value: productivity,
-                                  text: AppLocalizations.of(context)!
-                                      .productivity,
-                                  onChanged: (rate) {
-                                    setState(() {
-                                      productivity = rate;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 30),
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              textStyle: const TextStyle(fontSize: 24),
-                            ),
-                            onPressed: () {
-                              var uid = context.read<User>().uid;
-                              FirebaseFirestore firestore =
-                                  FirebaseFirestore.instance;
-                              var newTaskRef = firestore
-                                  .collection('/users/$uid/assessments')
-                                  .doc();
-                              var date = new DateTime.now();
-                              final curT =
-                                  "${date.year}-${date.month}-${date.day}";
-                              newTaskRef.set({
-                                "consistency": consistency,
-                                "motivation": motivation,
-                                "productivity": productivity,
-                                "date": curT,
-                              });
-                              day.beginDay();
-                            },
-                            child: Text(
-                              AppLocalizations.of(context)!.submit,
-                              style: TextStyle(color: Colors.black54),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+    return Column(
+      children: [
+        Container(
+          height: 380,
+          margin: const EdgeInsets.only(
+            top: 80,
+            left: 16,
+            right: 16,
+          ),
+          child: ClipRRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: segment.listColor.withOpacity(0.5),
                 ),
-                borderRadius: BorderRadius.circular(16),
+                child: Column(
+                  children: [
+                    buildHeader(segment, context),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30),
+                        child: GiveStarReviews(
+                          spaceBetween: 45,
+                          starData: [
+                            GiveStarData(
+                              value: consistency,
+                              text: AppLocalizations.of(context)!.consistency,
+                              onChanged: (rate) {
+                                setState(() {
+                                  consistency = rate;
+                                });
+                              },
+                            ),
+                            GiveStarData(
+                              value: motivation,
+                              text: AppLocalizations.of(context)!.motivation,
+                              onChanged: (rate) {
+                                setState(() {
+                                  motivation = rate;
+                                });
+                              },
+                            ),
+                            GiveStarData(
+                              value: productivity,
+                              text: AppLocalizations.of(context)!.productivity,
+                              onChanged: (rate) {
+                                setState(() {
+                                  productivity = rate;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 30),
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: const TextStyle(fontSize: 24),
+                        ),
+                        onPressed: () {
+                          var uid = context.read<User>().uid;
+                          FirebaseFirestore firestore =
+                              FirebaseFirestore.instance;
+                          var newTaskRef = firestore
+                              .collection('/users/$uid/assessments')
+                              .doc();
+                          var date = new DateTime.now();
+                          final curT = "${date.year}-${date.month}-${date.day}";
+                          newTaskRef.set({
+                            "consistency": consistency,
+                            "motivation": motivation,
+                            "productivity": productivity,
+                            "date": curT,
+                          });
+                          day.beginDay();
+                        },
+                        child: Text(
+                          AppLocalizations.of(context)!.submit,
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
+            borderRadius: BorderRadius.circular(16),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
